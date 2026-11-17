@@ -1,0 +1,95 @@
+{% set layout_name = "mail" %}
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #f6f9fc;
+  }
+  .hydro {
+    margin: 0 auto;
+    padding: 40px 20px;
+    max-width: 600px;
+  }
+  .hydro-logo-container {
+    text-align: center;
+    margin-bottom: 25px;
+  }
+  .hydro-logo {
+    width: 30%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+  .hydro-box {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e6ebf1;
+  }
+  .hydro-header {
+    background: #580D55;
+    color: #ffffff;
+    padding: 24px 30px;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+  .hydro-content {
+    padding: 30px;
+    line-height: 1.6;
+    color: #4a5568;
+    font-family: -apple-system, BlinkMacSystemFont, Roboto, "Noto Sans", "Noto Sans SC", "Noto Sans CJK SC", "Noto Sans CJK", "Source Han Sans", "Source Han Sans SC", "PingFang SC", "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  .hydro-content p {
+    margin-bottom: 16px;
+  }
+  .hydro a {
+    color: #580D55;
+    text-decoration: none;
+  }
+  .hydro blockquote {
+    margin: 20px 0;
+    padding: 12px 20px;
+    background: #f8fafc;
+    border-left: 4px solid #580D55;
+    color: #64748b;
+    border-radius: 4px;
+  }
+  .hydro-footer {
+    font-size: 13px;
+    color: #94a3b8;
+    padding: 20px 30px;
+    background: #fafafa;
+    border-top: 1px solid #f1f5f9;
+    text-align: center;
+  }
+</style>
+
+<div class="hydro">
+  <div class="hydro-logo-container">
+    <a href="{{ url_prefix }}/" target="_blank">
+      <img src="https://acm.hut.edu.cn/hutoj_logo.png" class="hydro-logo" alt="HUT Online Judge Logo">
+    </a>
+  </div>
+
+  <div class="hydro-box">
+    <div class="hydro-header">
+      {% block title %}{% endblock %}
+    </div>
+
+    <div class="hydro-content">
+      {% block content %}{% endblock %}
+    </div>
+
+    <div class="hydro-footer">
+      <p>
+        {{ _('此邮件由 {0} 自动发送，请勿回复。').format('<a href="' + url_prefix + '/" target="_blank">' + model.system.get('server.name') + '</a>')|safe }}
+      </p>
+      <p>
+        湖南工业大学计算机与人工智能学院双创中心&emsp;<a href="{{ url_prefix }}/wiki/about#contact">联系我们</a>
+      </p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,82 @@
+{% import "components/form.html" as form with context %}
+{% extends "layout/home_base.html" %}
+{% block home_content %}
+<div data-heading-extract-to="#menu-item-home_realname">
+  <div class="row">
+    <div class="columns">
+      <div class="section">
+        <div class="section__header">
+          <h1 class="section__title" id="realname" data-heading>实名认证</h1>
+        </div>
+        <div class="section__body">
+          <div class="row">
+            <div class="medium-3 columns">
+              <dl>
+                <dt>当前实名状态</dt>
+                <dd>
+                  {% if realname %}
+                    <span class="text-green">已实名</span>
+                  {% else %}
+                    <span class="text-orange">未实名</span>
+                  {% endif %}
+                </dd>
+              </dl>
+            </div>
+            {% if realname %}
+            <div class="medium-3 columns">
+              <dl>
+                <dt>学号</dt>
+                <dd>{{ realname.studentId }}</dd>
+                <dt>身份</dt>
+                <dd>{{ realname.identityType }}</dd>
+              </dl>
+            </div>
+            <div class="medium-6 columns">
+              <dl>
+                <dt>班级</dt>
+                <dd>{{ realname.className }}</dd>
+                <dt>姓名</dt>
+                <dd>{{ realname.realName }}</dd>
+              </dl>
+            </div>
+            {% endif %}
+          </div>
+          <form method="post">
+            {% if realname %}
+              {{ form.form_checkbox({
+                columns:12,
+                label:'实名信息展示设置',
+                name:'showRealName',
+                placeholder:'在资料页展示真实姓名',
+                value:realname.showRealName|default(true)
+              }) }}
+              <button type="submit" class="rounded primary button">保存设置</button>
+            {% endif %}
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="columns">
+      <div class="section">
+        <div class="section__header">
+          <h1 class="section__title" id="authorize" data-heading>实名认证授权</h1>
+        </div>
+        <div class="section__body typo">
+          <blockquote class="note">
+            <p><b>授权认证说明：</b></p>
+            <ul>
+            <li>点击下面的“授权”按钮，将跳转到智慧工大登录页面，登录账号后自动获取实名信息；</li>
+            <li>实名认证和账号绑定是两个相互独立的功能，授权认证不会绑定智慧工大账号，绑定智慧工大账号也不会自动添加实名信息；</li>
+            <li>请勿使用他人信息实名验证，以免影响相关权益。</li>
+            </ul>
+          </blockquote>
+          <a class="rounded primary button" href="{{ url('home_realname_cas') }}">授权</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,4 @@
+{
+  "texts": {{ model.builtin.STATUS_TEXTS | json | safe }},
+  "codes": {{ model.builtin.STATUS_CODES | json | safe }}
+}

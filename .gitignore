@@ -1,14 +1,25 @@
-# Built Files & Log
+# Dependencies and package manager state
+node_modules/
+node_modules.*
+.yarn/cache/
+.yarn/build-state.yml
+.yarn/unplugged/
+.yarn/sdks/
+.yarn/install-state.gz
+.pnp.*
+
+# Build output, caches, and logs
 .build/
 dist/
 *.cache
 .cache
 /build/*.js
-.cache/
 *.log
 *.js.map
 *.tsbuildinfo
 *.hydro
+
+# Test and profiling output
 .coverage
 coverage
 .nyc_output
@@ -16,16 +27,19 @@ benchmark.json
 globalConfig.json
 *.out
 .clinic/
+
+# Local environment and tooling
 .direnv/
 .omc/
-.yarn/cache
-.yarn/build-state.yml
-.yarn/unplugged
-.yarn/sdks
-.yarn/install-state.gz
-.pnp.*
+.monokle
+*.local
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
 
-# Config Files
+# Local and generated workspace configuration
 /config.yaml
 /config.json
 yarn.lock
@@ -34,36 +48,42 @@ tsconfig.json
 tsconfig.*.json
 .oxlintrc.json
 
-# Project Rules
-## Core
+# Core generated JavaScript (preserve authored scripts)
 packages/**/*.js
 !/build/*.js
 !**/bin/*.js
 !*.page.js
 !packages/register/index.js
-## ui-default
 !packages/ui-default/**/*.js
 !packages/geoip/download.js
 !examples/**
+
+# Generated UI assets
 packages/ui-default/public
 packages/ui-default/misc/.iconfont
 packages/ui-default/static/locale
 packages/ui-next/public
+packages/*/public/assets
+
+# Locally installed plugins and modules
 /plugins/
 /modules/
+
+# User addon source configuration and lockfiles
+!/usraddons/**/tsconfig.json
+!/usraddons/**/tsconfig.*.json
+!/usraddons/**/yarn.lock
+!/usraddons/**/pnpm-lock.yaml
 
 # Data files
 *.mmdb
 
-# Base
-node_modules/
+# Temporary files (preserve fixtures and directory placeholders)
 __*
 !__mocks__
 !.gitkeep
-*.local
 
-# Monokle
-.monokle
-
-packages/*/public/assets
-node_modules.*
+# OS metadata
+.DS_Store
+Thumbs.db
+*:Zone.Identifier

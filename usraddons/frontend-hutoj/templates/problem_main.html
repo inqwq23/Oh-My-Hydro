@@ -1,0 +1,183 @@
+{% import "components/record.html" as record with context %}
+{% import "components/problem.html" as problem with context %}
+{% extends "layout/basic.html" %}
+{% block content %}
+  <style>
+    .page--problem_main #searchForm .search {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0;
+    }
+
+    .page--problem_main #searchForm .search-options {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .page--problem_main #searchForm .search-options [data-fragment-id="problem_stat"] p {
+      margin: 0;
+    }
+
+    .page--problem_main #searchForm .search-options .search-sort {
+      position: static !important;
+      inset: auto !important;
+      float: none !important;
+      flex: 0 0 auto;
+      margin: 0;
+      padding: 0 10px;
+    }
+
+    .page--problem_main #searchForm .search input[name="q"],
+    .page--problem_main #searchForm .search-options .search-sort {
+      height: 38px;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      background: #f8fafc;
+      color: #334155;
+      box-shadow: none;
+      outline: none;
+    }
+
+    .page--problem_main #searchForm .search input[name="q"] {
+      flex: 1 1 auto;
+      min-width: 0;
+      padding: 0 12px;
+    }
+
+    .page--problem_main #searchForm .search input[name="q"]:focus,
+    .page--problem_main #searchForm .search-options .search-sort:focus {
+      background: #f3f8fd;
+      box-shadow: 0 0 0 2px rgba(95, 159, 214, 0.16);
+    }
+
+    .page--problem_main #searchForm .search button[type="submit"] {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 38px;
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: #5f9fd6;
+      color: #fff;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    .page--problem_main #searchForm .search button[type="submit"]:hover {
+      background: #4d8fc8;
+    }
+
+    .page--problem_main #searchForm .search button[type="submit"] .icon {
+      margin: 0;
+      color: inherit;
+    }
+  </style>
+  <div class="row">
+    <div class="medium-9 columns">
+      <div class="section display-mode">
+        <div class="section__body">
+          <form method="get" id="searchForm" action="{{ url('problem_main') }}">
+            <div class="search">
+              <input name="q" type="text" value="{{ qs }}" placeholder="{{ _('Search') }}">
+              <button type="submit">
+                <span class="icon icon-search"></span>
+              </button>
+            </div>
+            <div class="search-options">
+              {% include "partials/problem_stat.html" %}
+              <select name="sort" class="search-sort">
+                {%- for sortType in ["default", "recent"] -%}
+                  <option value="{{ sortType }}" {{ "selected" if sort == sortType else "" }}>{{ _('sort::' + sortType) }}</option>
+                {%- endfor -%}
+              </select>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="section display-mode">
+        <div class="section__body no-padding">
+          {% include "partials/problem_list.html" %}
+        </div>
+      </div>
+    </div>
+    <div class="medium-3 columns">
+      {% if handler.user.hasPriv(PRIV.PRIV_USER_PROFILE) %}
+        <div class="section side nojs--hide">
+          <ol class="menu">
+            <a href="javascript:;" class="menu__link edit-mode-hide" name="enter-edit-mode">
+              <span class="icon icon-edit"></span>
+              {{ _('Enter Edit Mode') }}
+            </a>
+            <a href="javascript:;" class="menu__link display-mode-hide" name="leave-edit-mode">
+              <span class="icon icon-edit"></span>
+              {{ _('Leave Edit Mode') }}
+            </a>
+            <div id="problem_selection" class="display-mode-hide"></div>
+            {% if handler.user.hasPerm(perm.PERM_EDIT_PROBLEM) %}
+              <a href="javascript:;" class="menu__link display-mode-hide" name="hide_selected_problems">
+                <span class="icon icon-close"></span>
+                {{ _('Hide Selected') }}
+              </a>
+              <a href="javascript:;" class="menu__link display-mode-hide" name="unhide_selected_problems">
+                <span class="icon icon-check"></span>
+                {{ _('Unhide Selected') }}
+              </a>
+              <a href="javascript:;" class="menu__link display-mode-hide" name="download_selected_problems">
+                <span class="icon icon-download"></span>
+                {{ _('Download Selected') }}
+              </a>
+              <a href="javascript:;" class="menu__link display-mode-hide" name="delete_selected_problems">
+                <span class="icon icon-delete"></span>
+                {{ _('Remove Selected') }}
+              </a>
+            {% endif %}
+            <a href="javascript:;" class="menu__link display-mode-hide" name="copy_selected_problems">
+              <span class="icon icon-copy"></span>
+              {{ _('Copy Selected') }}
+            </a>
+          </ol>
+        </div>
+      {% endif %}
+      {% if handler.user.hasPerm(perm.PERM_CREATE_PROBLEM) %}
+        <div class="section side">
+          <div class="section__header">
+            <h1 class="section__title">{{ _('Create Problem') }}</h1>
+          </div>
+          <ol class="menu">
+            {%- for item in ui.getNodes('ProblemAdd') -%}
+              <a href="{{ url(item.name, item.args) }}" class="menu__link">
+                <span class="icon icon-{{ item.args.icon|default('add') }}"></span>
+                {{ _(item.args.text) }}
+              </a>
+            {%- endfor -%}
+          </ol>
+          <div class="section__body">
+            <div class="typo supplementary">
+              <p>{{ _('You have permission to create problems for this domain.') }}</p>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+      <div class="section side">
+        <div class="section__header edit-mode-hide">
+          <h1 class="section__title">{{ _('Categories') }}</h1>
+        </div>
+        <div class="section__body">
+          {% include "partials/category.html" %}
+        </div>
+        <div class="section__body edit-mode-hide">
+          {% include "partials/problem_lucky.html" %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

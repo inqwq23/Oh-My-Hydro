@@ -1,0 +1,88 @@
+{% extends "layout/basic.html" %}
+{% import "components/contest.html" as contest with context %}
+{% import "components/record.html" as record with context %}
+{% import "components/problem.html" as problem with context %}
+{% block content %}
+{{ set(UiContext, 'tdoc', tdoc) }}
+{{ set(UiContext, 'tsdoc', tsdoc) }}
+<div class="row">
+  <div class="medium-9 columns">
+    <div class="section">
+      <div class="section__header" style="align: center">
+        <h1 class="section__title">{{ tdoc.title }}</h1>
+      </div>
+      <div class="section__body" style="font-size: 14px">
+        {# <span class="problem__tag-item">{{ _(model.contest.statusText(tdoc, tsdoc)) }}</span>
+        <span class="problem__tag-item icon icon-award">{{ _(model.contest.RULES[tdoc.rule].TEXT) }}</span>
+        <span class="problem__tag-item">{{ _('Start at') }}: {{ contest.render_time(tsdoc.startAt or tdoc.beginAt) }}</span>
+        <span class="problem__tag-item icon icon-schedule">{{ contest.render_duration(tdoc) }} {{ _('hour(s)') }}</span>
+        <span class="problem__tag-item">{{ _('Host') }}: {{ user.render_inline(udict[tdoc.owner], badge=false) }}</span>
+        <span class="problem__tag-item icon icon-user--multiple">{{ tdoc['attend']|default(0) }}</span>
+        {% if tsdoc.attend %}
+          <span class="problem__tag-item icon icon-check">{{ _('Attended') }}</span>
+        {% endif %} #}
+        <div class="row">
+          <div class="medium-6 columns">
+            <dl class="large horizontal">
+              <dt>{{ _('Status') }}</dt>
+              <dd>
+                {{ _(model.contest.statusText(tdoc, tsdoc)) }}
+                {% if tsdoc.attend %}
+                  ({{ _('Attended') }})
+                {% endif %}
+              </dd>
+              <dt>{{ _('Rule') }}</dt><dd>{{ _(model.contest.RULES[tdoc.rule].TEXT) }}</dd>
+              <dt>{{ _('Start at') }}</dt><dd>{{ contest.render_time(tsdoc.startAt or tdoc.beginAt) }}</dd>
+            </dl>
+          </div>
+          <div class="medium-6 columns">
+            <dl class="large horizontal">
+              <dt>{{ _('Duration') }}</dt><dd>{{ contest.render_duration(tdoc) }} {{ _('hour(s)') }}</dd>
+              <dt>{{ _('Host') }}</dt><dd>{{ user.render_inline(udict[tdoc.owner], badge=false) }}</dd>
+              <dt>{{ _('Partic.') }}</dt><dd>{{ tdoc['attend']|default(0) }}</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section__body typo richmedia">
+      {# 增加：提醒登错账号的考生切换比赛专用账号（场景如新生赛） #}
+      {% if handler.user.hasPriv(PRIV.PRIV_USER_PROFILE) and not handler.user.hasPerm(perm.PERM_ATTEND_CONTEST) %}
+        <blockquote class="warn">
+          <p>本比赛为线下比赛或非公开比赛，要求使用比赛专用账户参与。<strong>当前账号无参加比赛权限。</strong>解决方法：</p>
+          <ul>
+            <li>切换到比赛主办方发放的专用账号进行比赛；</li>
+            <li>如果当前账号已经是比赛专用账号，请立即举手将情况反馈给监考人员。</li>
+          </ul>
+        </blockquote>
+      {% endif %}
+        {{ tdoc['content']|markdown|safe }}
+      {% if model.contest.isOngoing(tdoc, tsdoc) %}
+        <blockquote class="warn">
+          <p>我们会在赛后检查代码相似度及<strong>代码 AI 率</strong>。</p>
+        </blockquote>
+      {% endif %}
+      {% if tdoc.duration %}
+        <blockquote class="note">
+          <p>{{ _('The contest is a flexible time contest. You need to complete the contest within a specified time after you attended.') }}</p>
+        </blockquote>
+      {% endif %}
+      </div>
+    </div>
+    {% if files.length %}
+      <div class="section">
+        <div class="section__header">
+          <h1 class="section__title">{{ _('Files') }}</h1>
+        </div>
+        {% set filetype = 'private' %}
+        {% include "partials/files.html" %}
+      </div>
+    {% endif %}
+  </div>
+  <div class="medium-3 columns">
+  {% set owner_udoc = udict[tdoc.owner] %}
+  {% include "partials/contest_sidebar.html" %}
+  </div>
+</div>
+{% endblock %}

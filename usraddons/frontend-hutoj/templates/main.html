@@ -1,0 +1,28 @@
+{% set page_name = "homepage" %}
+{% extends "layout/basic.html" %}
+{% import "components/contest.html" as contest with context %}
+{% import "components/problem.html" as problem with context %}
+{% import "components/user.html" as user with context %}
+{% block content %}
+{% if handler.domain._id == 'system' and not handler.session.legacy %}
+<div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: {% if theme and theme.includes('dark') %}linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), {% else %}linear-gradient(rgba(255,255,255,0.5), rgba(255,255,255,0.5)), {% endif %}url('/syshome_background.png') center top / cover no-repeat; z-index: -1;"></div>
+<img src="/syshome_logo.png" style="height: 25vh; display: block; margin: 0 auto 20px;" />
+<div class="row">
+{% else %}
+<div class="row">
+{% endif %}
+  {% for column in contents %}
+    <div class="large-{{ column.width }} columns">
+      {% for s in column.sections %}
+        {% if templateExists("partials/homepage/" + s[0] + ".html") %}
+          {% set payload = s[1] %}
+          {% include "partials/homepage/" + s[0] + ".html" %}
+        {% else %}
+          {% set payload = _("Template {0} not found.").format(s[0]) %}
+          {% include "partials/homepage/error.html" %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}
