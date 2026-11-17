@@ -1,0 +1,11 @@
+{
+  "name": "hutoj-oauth",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "license": "AGPL-3.0-or-later",
+  "peerDependencies": { "hydrooj": "^5.0.4" },
+  "scripts": {
+    "test": "node --experimental-strip-types --test test/*.test.ts test/*.test.cjs",
+    "typecheck": "node scripts/typecheck.cjs"
+  }
+}

@@ -1,0 +1,11 @@
+{% extends "layout/basic.html" %}
+{% block content %}
+<div class="row"><div class="medium-8 medium-centered columns"><div class="section">
+  <div class="section__header"><h1 class="section__title">需要先完成实名认证</h1></div>
+  <div class="section__body typo">
+    <p><strong>{{ clientName }}</strong> 申请读取实名资料，但当前账号 {{ username }}（UID：{{ uid }}）尚未完成有效的实名认证。</p>
+    <p>本次授权已停止。请先完成实名认证，再回到报名系统重新发起授权。</p>
+    <a class="rounded primary button" href="{{ url('home_realname') }}">前往实名认证</a>
+  </div>
+</div></div></div>
+{% endblock %}

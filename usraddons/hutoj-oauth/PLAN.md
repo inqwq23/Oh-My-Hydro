@@ -1,6 +1,6 @@
 # HUTOJ OAuth 插件开发计划
 
-确认日期：2026-11-17。状态：需求已确认，待实现。
+确认日期：2026-11-17。实现日期：2026-11-18。状态：首版代码和接入文档已实现，自动化验证见 [README](README.md#开发验证)，待目标站点端到端联调。
 
 在 `usraddons/hutoj-oauth/` 开发一个 Hydro 插件，让第三方报名系统通过用户授权获取 HUTOJ 的 UID、用户名和指定实名资料。先完成 HUTOJ 侧 API、验证用例和接入文档，再由报名系统实现接入。
 
@@ -29,7 +29,7 @@
 
 - [实名插件](../realname-superhut/index.ts)使用 `realname_superhut` 集合保存实名资料，并提供 `getRealnameInfo(uid)`。OAuth 通过独立的实名适配层读取权威记录，不以用户表中的镜像字段作为唯一判断依据。
 - 实名记录包含 `uid`、`studentId`、`className`、`realName`、`identityType`、`showRealName`、`verifiedAt` 和 `source`。其中认证时间、认证来源及展示开关不属于本期对外返回字段。
-- 实名入口为 `/home/realname`。采用“完成后重新发起”的流程，默认无需修改现有实名插件的跳转逻辑。
+- 实名入口为 `/home/realname`。采用“完成后重新发起”的流程，不修改现有实名插件的跳转逻辑；实名写入新增随机 `revision`，确保同一毫秒内重复认证也能使旧授权失效。
 - [Hydro 内置 OAuth 模型](../../packages/hydrooj/src/model/oauth.ts)用于接入外部登录服务。本插件新增 HUTOJ 对外授权能力，接口使用独立的 `/oauth2/` 前缀。
 - 通过 `apply(ctx, config)` 注册服务和路由，从 `hydrooj` 公共入口导入 API，通过 `ctx.db` 访问数据库。
 

@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import {
     Context,
     CreateError,
@@ -17,6 +18,7 @@ import {
 } from 'hydrooj';
 
 interface RealnameInfo {
+    revision?: string;
     uid: number;
     studentId: string;
     studentIdClaimed?: boolean;
@@ -116,6 +118,8 @@ export async function setRealnameInfo(
     const normalizedRealName = `${realName}`.trim();
     const normalizedIdentityType = `${identityType}`.trim();
     const payload = {
+        // Distinguish every verification, including repeated writes in one millisecond.
+        revision: randomUUID(),
         uid,
         studentId: normalizedStudentId,
         className: normalizedClassName,
