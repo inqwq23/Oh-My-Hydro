@@ -1,0 +1,9 @@
+{
+  "name": "@hutoj/contest-client",
+  "version": "0.10.2",
+  "description": "HUTOJ contest client integration for Hydro 5",
+  "main": "index.js",
+  "files": ["index.js", "src", "templates", "web", "README.md", "API.md", "tsconfig.json"],
+  "engines": { "node": ">=22" },
+  "peerDependencies": { "hydrooj": "^5.0.4" }
+}

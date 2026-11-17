@@ -1,0 +1,65 @@
+{% extends "layout/home_base.html" %}
+{% block home_content %}
+{% if category == "account" %}
+  <div class="section" id="upload_avatar" data-heading-extract-to="#menu-item-home_account" style="nojs--hide">
+    <div class="section__header">
+      <h1 class="section__title" id="avatar" data-heading>{{ _('Avatar') }}</h1>
+    </div>
+    <div class="section__body typo">
+      <p>{{ _('You can also upload your avatar to Gravatar and it will be automatically updated here.')|safe }}</p>
+    </div>
+    <div class="section__body">
+      <img width="128px" height="128px" src="{{ avatarUrl(current.avatar, 128) }}" alt="{{ current.uname }}">
+      <div class="changeAvatar"></div>
+      <button class="change-avatar button rounded primary">{{ _('Change avatar') }}</button>
+    </div>
+  </div>
+
+  <div class="section" id="change_username" data-heading-extract-to="#menu-item-home_account"
+       data-check-url="{{ url('home_username_check') }}"
+       data-current-username="{{ current.uname }}"
+       data-text-taken="{{ _('This username is already in use.') }}"
+       data-text-invalid="{{ _('Username format is invalid.') }}"
+       data-text-empty="{{ _('Username cannot be empty.') }}"
+       data-text-unchanged="{{ _('The new username must be different from the current username.') }}"
+       data-text-error="{{ _('Unable to check username availability. Please try again.') }}"
+       data-requires-confirmation="{{ 'false' if usernameChange.bypassCooldown else 'true' }}"
+       data-confirm-message="{{ _('Are you sure you want to change your username? It can only be changed once every 30 days.') }}"
+       data-confirm-label="{{ _('Confirm username change') }}"
+       data-cancel-label="{{ _('Cancel username change') }}">
+    <div class="section__header">
+      <h1 class="section__title" id="username" data-heading>{{ _('Change Username') }}</h1>
+    </div>
+    <div class="section__body">
+      <form method="post" action="{{ url('home_username') }}">
+        {{ form.form_text({
+             label:'New Username',
+             name:'uname',
+             value:current.uname,
+             extra_attr:'required',
+             disabled:not usernameChange.canChange,
+             columns:5
+           }) }}
+        <div class="row"><div class="medium-5 columns end">
+          <p class="help-text" data-username-availability aria-live="polite"></p>
+        </div></div>
+        {% if not usernameChange.bypassCooldown %}
+          <div class="row"><div class="medium-5 columns end">
+            <p class="help-text" style="color: #d33; font-size: 0.875rem;">
+              {{ _('After changing, you cannot change it again for 30 days.') }}
+            </p>
+          </div></div>
+        {% endif %}
+        {% if usernameChange.canChange %}
+          <div class="row"><div class="columns">
+            <input type="submit" class="rounded primary button" value="{{ _('Change username') }}" disabled>
+          </div></div>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+{% endif %}
+<div class="section" data-heading-extract-to="#menu-item-home_{{ category }}">
+  {% include "partials/setting.html" %}
+</div>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "layout/basic.html" %}
+{% block content %}
+<div class="row">
+  <div class="medium-9 columns">
+    <div class="section">
+      <div class="section__header"><h1 class="section__title">比赛客户端</h1></div>
+      <div class="section__body">
+        <form method="post" style="font-size: 16px">
+          <input type="hidden" name="csrf" value="{{ csrf }}" />
+          {% for key, label in [
+            ['restrictNetwork', '禁止网络'],
+            ['blockBlacklistApps', '禁止黑名单应用'],
+            ['blockUsbStorage', '禁止 USB 存储设备'],
+            ['forceFullscreen', '始终强制全屏']
+          ] %}
+          <label
+            style="
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              margin-bottom: 16px;
+              font-size: 16px;
+            ">
+            <input type="checkbox" name="{{ key }}" {% if policy[key] %}checked{% endif %} />
+            {{ label }}
+          </label>
+          {% endfor %}
+          <label>
+            采集帧率
+            <input
+              class="textbox"
+              type="number"
+              name="captureFps"
+              min="1"
+              max="60"
+              value="{{ policy.captureFps }}"
+              required />
+          </label>
+          <label>
+            码率（kbps）
+            <input
+              class="textbox"
+              type="number"
+              name="captureBitrateKbps"
+              min="128"
+              max="50000"
+              value="{{ policy.captureBitrateKbps }}"
+              required />
+          </label>
+          <label>
+            网络放行主机
+            <textarea class="textbox" name="networkAllowHosts" rows="5">{{ policy.networkAllowHosts | join('\n') }}</textarea>
+          </label>
+          <label>
+            网络放行端点（tcp://主机:端口 或 udp://主机:端口）
+            <textarea class="textbox" name="networkAllowEndpoints" rows="4">{{ policy.networkAllowEndpoints | join('\n') }}</textarea>
+          </label>
+          <label>
+            进程黑名单
+            <textarea class="textbox" name="processBlackList" rows="6">{{ policy.processBlackList | join('\n') }}</textarea>
+          </label>
+          <label>
+            程序关键词黑名单
+            <textarea class="textbox" name="keywordBlackList" rows="4">{{ policy.keywordBlackList | join('\n') }}</textarea>
+          </label>
+          <label>
+            程序关键词白名单
+            <textarea class="textbox" name="keywordWhiteList" rows="4">{{ policy.keywordWhiteList | join('\n') }}</textarea>
+          </label>
+          <button
+            class="button primary"
+            type="submit"
+            style="background: #580d55; border-color: #580d55; font-size: 16px">
+            保存
+          </button>
+          <a class="button" href="{{ url('contest_detail', tid=tdoc.docId) }}" style="font-size: 16px">返回比赛</a>
+          <a class="button" href="{{ url('hutoj_client_monitor', tid=tdoc.docId) }}" style="font-size: 16px">屏幕监控</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

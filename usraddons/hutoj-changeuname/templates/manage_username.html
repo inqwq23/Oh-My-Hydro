@@ -1,0 +1,40 @@
+{% extends "manage_base.html" %}
+{% block manage_content %}
+<div class="section" id="manage_username_change"
+     data-check-url="{{ url('home_username_check') }}"
+     data-text-taken="{{ _('This username is already in use.') }}"
+     data-text-invalid="{{ _('Username format is invalid.') }}"
+     data-text-empty="{{ _('Username cannot be empty.') }}"
+     data-text-unchanged="{{ _('The new username must be different from the current username.') }}"
+     data-text-error="{{ _('Unable to check username availability. Please try again.') }}">
+  <div class="section__header">
+    <h1 class="section__title" data-heading>{{ _('Username Management') }}</h1>
+  </div>
+  <div class="section__body">
+    <form method="post">
+      <div class="row">
+        <div class="medium-5 columns form__item end">
+          <label>{{ _('Target User') }}</label>
+          <input type="hidden" name="target">
+          <div class="username-target-selector">
+            <button type="button" class="rounded button" data-select-target-user>{{ _('Select User') }}</button>
+            <span data-selected-target-user></span>
+          </div>
+        </div>
+      </div>
+      {{ form.form_text({
+           label:'New Username',
+           name:'uname',
+           extra_attr:'required',
+           columns:5
+         }) }}
+      <div class="row"><div class="medium-5 columns end">
+        <p class="help-text" data-username-availability aria-live="polite"></p>
+      </div></div>
+      <div class="row"><div class="columns">
+        <input type="submit" class="rounded primary button" value="{{ _('Change username') }}" disabled>
+      </div></div>
+    </form>
+  </div>
+</div>
+{% endblock %}

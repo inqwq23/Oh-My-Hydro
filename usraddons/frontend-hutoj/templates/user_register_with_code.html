@@ -1,0 +1,46 @@
+{% extends "layout/immersive.html" %}
+{% block content %}
+<div class="immersive--content immersive--center">
+  <h1>{{ _('Sign Up') }}</h1>
+  <form method="POST">
+    <div>
+      <label class="inverse material textbox">
+        {{ _('Email') }}
+        <input type="text" value="{{ mail }}" disabled>
+      </label>
+    </div>
+    <div>
+      <label class="inverse material textbox">
+        {{ _('Username') }}
+        <input name="uname" value="{{ username or '' }}" type="text" autofocus>
+      </label>
+    </div>
+    <div>
+      <label class="inverse material textbox">
+        {{ _('Password') }}
+        <input name="password" type="password">
+      </label>
+    </div>
+    <div>
+      <label class="inverse material textbox">
+        {{ _('Repeat Password') }}
+        <input name="verifyPassword" type="password">
+      </label>
+    </div>
+    <div class="text-center">
+      <input type="submit" value="{{ _('user_register') }}" class="inverse expanded rounded primary button">
+    </div>
+
+    <div class="registration-notice" style="margin-top: 20px; font-size: 0.9em; opacity: 0.8; line-height: 1.6;">
+      <p style="margin-bottom: 8px;">
+        <strong>提示：</strong>
+      </p>
+      <ul style="list-style: none; padding-left: 0;">
+        <li>• 请勿使用姓名或学号作为用户名注册账号；</li>
+        <li>• 用户一旦注册，用户名无法修改，请谨慎操作。如有特殊情况确实需要修改用户名的，请<a href="/wiki/about#contact" target="_blank">联系超管</a>；</li>
+        <li>• 注册本站账号即意味着你同意我们的<a href="/wiki/about#tos" target="_blank">服务条款</a>及<a href="/wiki/about#privacy" target="_blank">隐私政策</a>。</li>
+      </ul>
+    </div>
+  </form>
+</div>
+{% endblock %}

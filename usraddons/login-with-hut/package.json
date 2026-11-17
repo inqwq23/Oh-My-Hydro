@@ -1,0 +1,11 @@
+{
+  "name": "login-with-hut",
+  "version": "1.1.2",
+  "description": "HUT CAS login provider for Hydro",
+  "main": "index.ts",
+  "author": "hutoj",
+  "license": "MIT",
+  "devDependencies": {
+    "hydrooj": "^5.0.0-beta.18"
+  }
+}

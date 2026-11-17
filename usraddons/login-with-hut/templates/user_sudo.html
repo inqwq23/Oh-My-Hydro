@@ -1,0 +1,78 @@
+{% extends "layout/immersive.html" %}
+{% block content %}
+
+<style>
+  .sudo-switch {
+      cursor: pointer;
+      list-style: none; /* 可选：去掉列表前面的小圆点，看起来更像按钮 */
+      margin-bottom: 8px; /* 可选：增加一点间距 */
+  }
+</style>
+
+
+<div class="row"><div class="columns">
+  <div class="immersive--content immersive--center">
+    <h1>{{ _('Confirm Access') }}</h1>
+    <form method="POST">
+      {% if hutCasBound %}
+      <div class="row sudo-div" data-sudo="cas"><div class="columns">
+        <input type="hidden" name="cas_verify" value="1">
+        <div class="text-center supplementary inverse typo">
+          <p>点击确认后将跳转到 智慧工大 完成校验</p>
+        </div>
+      </div></div>
+      {% endif %}
+      {% if UserContext.authn %}
+      <div class="row sudo-div confirm-div nojs--hide" data-sudo="authn"{% if hutCasBound %} style="display:none"{% endif %}><div class="columns">
+        <input value="{{ _('Use Authenticator') }}" class="inverse expanded rounded primary button" name="webauthn_verify">
+        <input type="hidden" name="authnChallenge" value="">
+      </div></div>
+      {% endif %}
+      {% if UserContext.tfa %}
+      <div class="row sudo-div" data-sudo="tfa" style="display:none"><div class="columns">
+        <label class="inverse material textbox">
+          {{ _('Two Factor Authentication Code') }}
+          <input name="tfa" type="number">
+        </label>
+      </div></div>
+      {% endif %}
+      <div class="row sudo-div" data-sudo="password"{% if hutCasBound %} style="display:none"{% endif %}><div class="columns">
+        <label class="inverse material textbox">
+          {{ _('Password') }}
+          <input name="password" type="password">
+        </label>
+      </div></div>
+      <div class="row confirm-div"><div class="columns">
+        <div class="text-center">
+          <input value="{{ _('Confirm') }}" class="inverse expanded rounded primary button" name="confirm">
+        </div>
+      </div></div>
+    </form>
+    {% if hutSudoError %}
+    <div class="row"><div class="columns">
+      <div class="note typo">{{ hutSudoError }}</div>
+    </div></div>
+    {% endif %}
+    <div class="row"><div class="columns">
+      <div class="text-center supplementary inverse typo">
+        <p>{{ _('Tip: You are entering sudo mode.')|safe }}</p>
+        <p>{{ _("After you've performed a sudo-protected action, you'll only be asked to re-authenticate again after a few hours of inactivity.") }}</p>
+      </div>
+    </div></div>
+    {% if hutCasBound or UserContext.authn or UserContext.tfa %}
+    <br>
+    <div class="row nojs--hide"><div class="columns">
+      <div class="supplementary inverse typo">
+        <p><strong>{{ _('其它方式:') }}</strong></p>
+        <ol>
+          {% if hutCasBound %}<li class="sudo-switch" data-sudo="cas"><a>使用 HUT CAS</a></li>{% endif %}
+          {% if UserContext.authn %}<li class="sudo-switch" data-sudo="authn"{% if not hutCasBound %} style="display:none"{% endif %}><a>{{ _('Use Authenticator') }}</a></li>{% endif %}
+          {% if UserContext.tfa %}<li class="sudo-switch" data-sudo="tfa" style="display:none"><a>{{ _('Use TFA Code') }}</a></li>{% endif %}
+          <li class="sudo-switch" data-sudo="password"{% if not hutCasBound %} style="display:none"{% endif %}><a>{{ _('Use Password') }}</a></li>
+        </ol>
+      </div>
+    </div></div>
+    {% endif %}
+  </div>
+</div></div>
+{% endblock %}
