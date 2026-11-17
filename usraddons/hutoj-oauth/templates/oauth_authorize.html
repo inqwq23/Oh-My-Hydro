@@ -1,0 +1,20 @@
+{% extends "layout/basic.html" %}
+{% block content %}
+<div class="row"><div class="medium-8 medium-centered columns"><div class="section">
+  <div class="section__header"><h1 class="section__title">第三方应用授权</h1></div>
+  <div class="section__body typo">
+    <p><strong>{{ clientName }}</strong> 请求读取你的 HUTOJ 资料。</p>
+    <p>当前账号：{{ username }}（UID：{{ uid }}）</p>
+    <ul>
+      <li>基础资料：UID、用户名</li>
+      {% if 'realname' in scope %}<li>实名资料：姓名、学号、班级、身份类型、已实名标记</li>{% endif %}
+    </ul>
+    {% if 'realname' in scope %}<p>本次授权独立于资料页的实名展示设置。只有你同意后，该应用才能读取上述实名资料。</p>{% endif %}
+    <form method="post" action="{{ url('hutoj_oauth_authorize') }}">
+      <input type="hidden" name="request_id" value="{{ requestId }}">
+      <button class="rounded primary button" type="submit" name="decision" value="allow">同意授权</button>
+      <button class="rounded button" type="submit" name="decision" value="deny">拒绝</button>
+    </form>
+  </div>
+</div></div></div>
+{% endblock %}
